@@ -132,10 +132,12 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
             Panel::Tools => {
                 ui.label("Tools");
-                if ui.button("🖱 Selection").clicked() {
+
+                if ui.button("🖱").on_hover_text("Selection").clicked() {
                     println!("Tool: Selection");
                 }
-                if ui.button("✏ Pencil").clicked() {
+
+                if ui.button("✏").on_hover_text("Pencil").clicked() {
                     println!("Tool: Pencil");
                 }
             }
