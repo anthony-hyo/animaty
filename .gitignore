@@ -28,6 +28,7 @@
 .idea/
 *.iml
 out/
+.fleet/
 
 # ==============================
 # Sistema operacional
