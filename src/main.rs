@@ -1,5 +1,6 @@
+use std::error::Error;
 use eframe::egui::{Style, Visuals};
-use eframe::CreationContext;
+use eframe::{App, CreationContext};
 
 mod app;
 
@@ -9,9 +10,10 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "Ruffly v0.1",
         native_options,
-        Box::new(|creation_context: &CreationContext| {
-            let style = Style {
-                visuals: Visuals::light(),
+         
+         Box::new(|creation_context: &CreationContext| -> Result<Box<dyn App>, Box<dyn Error + Send + Sync>> {
+            let style: Style = Style {
+                visuals: Visuals::dark(),
                 ..Style::default()
             };
 

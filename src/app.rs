@@ -26,7 +26,7 @@ pub struct RufflyApp {
 }
 
 impl RufflyApp {
-    pub(crate) fn new(_cc: &eframe::CreationContext<'_>) -> Self {
+    pub(crate) fn new(_creation_context: &eframe::CreationContext<'_>) -> Self {
         // Customize egui here with cc.egui_ctx.set_fonts and cc.egui_ctx.set_visuals.
         // Restore app state using cc.storage (requires the "persistence" feature).
         // Use the cc.gl (a glow::Context) to create graphics shaders and buffers that you can use
@@ -37,7 +37,6 @@ impl RufflyApp {
 
 impl Default for RufflyApp {
     fn default() -> Self {
-        // Start with a central canvas, and then create splits
         let mut tree = DockState::new(vec![Panel::Canvas]);
 
         let [old, _new] = tree.main_surface_mut()
@@ -140,21 +139,35 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
             Panel::Properties => {
                 ui.label("Properties");
+
                 ui.horizontal(|ui| {
                     ui.label("Project:");
                     ui.text_edit_singleline(self.project_name);
                 });
+
                 ui.add(egui::Slider::new(self.canvas_width, 100.0..=1920.0).text("Width"));
                 ui.add(egui::Slider::new(self.canvas_height, 100.0..=1080.0).text("Height"));
             }
 
             Panel::Timeline => {
                 ui.label("Timeline");
+
                 ui.horizontal(|ui| {
-                    if ui.button("⏮️").clicked() {}
-                    if ui.button("⏸️").clicked() {}
-                    if ui.button("▶️").clicked() {}
-                    if ui.button("⏭️").clicked() {}
+                    if ui.button("⏮").on_hover_text("Go to start").clicked() {
+                        println!("Timeline: back")
+                    }
+                    if ui.button("⏸").on_hover_text("Pause").clicked() {
+                        println!("Timeline: pause");
+                    }
+
+                    if ui.button("▶").on_hover_text("Play").clicked() {
+                        println!("Timeline: play");
+                    }
+
+                    if ui.button("⏭").on_hover_text("Go to end").clicked() {
+                        println!("Timeline: end");
+                    }
+
                     ui.separator();
                     ui.label("Frame: 1 / 30");
                 });
