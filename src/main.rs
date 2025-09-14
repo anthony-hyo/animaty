@@ -1,11 +1,13 @@
 use std::error::Error;
-use eframe::egui::{Style, Visuals};
-use eframe::{App, CreationContext};
+use eframe::{egui::{Style, Visuals, ViewportBuilder}, App, CreationContext};
 
 mod app;
 
 fn main() -> Result<(), eframe::Error> {
-    let native_options = eframe::NativeOptions::default();
+    let native_options = eframe::NativeOptions {
+        viewport: ViewportBuilder::default().with_maximized(true),
+        ..Default::default()
+    };
 
     eframe::run_native(
         "Ruffly v0.1",
