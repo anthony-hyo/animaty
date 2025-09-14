@@ -10,6 +10,7 @@ enum Panel {
     Canvas,
     Tools,
     Properties,
+    Library,
     Timeline,
 }
 
@@ -39,20 +40,14 @@ impl Default for RufflyApp {
         // Start with a central canvas, and then create splits
         let mut tree = DockState::new(vec![Panel::Canvas]);
 
-        // Create a column on the left with Tools; center remains the canvas
-        let [left, center] =
-            tree.main_surface_mut()
-                .split_left(NodeIndex::root(), 0.20, vec![Panel::Tools]);
+        let [old, _new] = tree.main_surface_mut()
+            .split_left(NodeIndex::root(), 0.20, vec![Panel::Tools]);
 
-        // Split the left column top/bottom, adding Properties below
-        let [_, _] = tree
-            .main_surface_mut()
-            .split_below(left, 0.6, vec![Panel::Properties]);
+        let [_old, _new] = tree.main_surface_mut()
+            .split_below(old, 0.85, vec![Panel::Timeline]);
 
-        // Add the Timeline below the center (canvas)
-        let [_, _] = tree
-            .main_surface_mut()
-            .split_below(center, 0.85, vec![Panel::Timeline]);
+        let [_old, _new] = tree.main_surface_mut()
+            .split_right(old, 0.6, vec![Panel::Properties, Panel::Library]);
 
         Self {
             tree,
@@ -85,6 +80,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
             Panel::Canvas => "Canvas".into(),
             Panel::Tools => "Tools".into(),
             Panel::Properties => "Properties".into(),
+            Panel::Library => "Library".into(),
             Panel::Timeline => "Timeline".into(),
         }
     }
@@ -163,6 +159,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     ui.label("Frame: 1 / 30");
                 });
             }
+            &mut Panel::Library => todo!(),
         }
     }
 
