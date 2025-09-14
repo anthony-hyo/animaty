@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console in release on Windows
 
 use eframe::egui;
+use eframe::egui::{Pos2, Rect, Scene, Vec2};
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 
 #[derive(Clone)]
@@ -18,6 +19,8 @@ pub struct RufflyApp {
 
     canvas_width: f32,
     canvas_height: f32,
+
+    scene_rect: Rect,
 }
 
 impl RufflyApp {
@@ -51,8 +54,11 @@ impl Default for RufflyApp {
         Self {
             tree,
             project_name: "New Project".to_owned(),
+
             canvas_width: 800.0,
             canvas_height: 600.0,
+
+            scene_rect: Rect::ZERO,
         }
     }
 }
@@ -61,8 +67,11 @@ impl Default for RufflyApp {
 /// This avoids borrow conflicts with `&mut self.tree`.
 struct TabViewer<'a> {
     project_name: &'a mut String,
+
     canvas_width: &'a mut f32,
     canvas_height: &'a mut f32,
+
+    scene_rect: &'a mut Rect,
 }
 
 impl<'a> egui_dock::TabViewer for TabViewer<'a> {
@@ -96,13 +105,45 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     egui::StrokeKind::Inside,
                 );
 
-                painter.text(
+               /* painter.text(
                     rect.center(),
                     egui::Align2::CENTER_CENTER,
                     "Drawing Area",
                     egui::FontId::default(),
                     egui::Color32::GRAY,
-                );
+                );*/
+
+
+                egui::Frame::group(ui.style())
+                    .inner_margin(0.0)
+                    .show(ui, |ui| {
+                        let scene = Scene::new()
+                            .max_inner_size([350.0, 1000.0])
+                            .zoom_range(0.1..=2.0);
+
+                        let mut reset_view = false;
+                        let mut inner_rect = Rect::NAN;
+                        let response = scene
+                            .show(ui, &mut self.scene_rect, |ui| {
+                                reset_view = ui.button("Reset view").clicked();
+
+                                ui.add_space(1000.0);
+
+                                //self.widget_gallery.ui(ui);
+
+                                ui.put(
+                                    Rect::from_min_size(Pos2::new(0.0, -64.0), Vec2::new(200.0, 16.0)),
+                                    egui::Label::new("You can put a widget anywhere").selectable(false),
+                                );
+
+                                inner_rect = ui.min_rect();
+                            })
+                            .response;
+
+                        /*if reset_view || response.double_clicked() {
+                            self.scene_rect = inner_rect;
+                        }*/
+                    });
 
                 if resp.clicked() {
                     if let Some(pos) = resp.interact_pointer_pos() {
@@ -175,15 +216,17 @@ impl eframe::App for RufflyApp {
             });
         });
 
-        // Dockable area — we pass only mutable references to the fields used by the viewer
         DockArea::new(&mut self.tree)
             .style(Style::from_egui(ctx.style().as_ref()))
             .show(
                 ctx,
                 &mut TabViewer {
                     project_name: &mut self.project_name,
+
                     canvas_width: &mut self.canvas_width,
                     canvas_height: &mut self.canvas_height,
+
+                    scene_rect: &mut self.scene_rect,
                 },
             );
     }
