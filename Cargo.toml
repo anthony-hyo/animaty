@@ -1,0 +1,10 @@
+[package]
+name = "ruffly"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+eframe = "0.32.1"
+rfd = "0.15.4"
+serde = "1.0.219"
+swf = "0.2.2"
