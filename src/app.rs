@@ -2,6 +2,7 @@
 
 use eframe::egui;
 use eframe::egui::{Pos2, Rect, Scene, Vec2};
+use egui_dock::egui::UiBuilder;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 
 #[derive(Clone)]
@@ -44,7 +45,9 @@ impl Default for RufflyApp {
                 .split_left(NodeIndex::root(), 0.20, vec![Panel::Tools]);
 
         // Split the left column top/bottom, adding Properties below
-        let [_, _] = tree.main_surface_mut().split_below(left, 0.6, vec![Panel::Properties]);
+        let [_, _] = tree
+            .main_surface_mut()
+            .split_below(left, 0.6, vec![Panel::Properties]);
 
         // Add the Timeline below the center (canvas)
         let [_, _] = tree
@@ -58,7 +61,7 @@ impl Default for RufflyApp {
             canvas_width: 800.0,
             canvas_height: 600.0,
 
-            scene_rect: Rect::ZERO,
+            scene_rect: Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 600.0)),
         }
     }
 }
@@ -89,67 +92,42 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
     fn ui(&mut self, ui: &mut egui::Ui, tab: &mut Self::Tab) {
         match tab {
             Panel::Canvas => {
-                // Drawing area (can be customized for your renderer)
                 ui.vertical_centered(|ui| ui.heading("Canvas"));
-
-                let rect = ui.available_rect_before_wrap();
-                let resp = ui.allocate_rect(rect, egui::Sense::click_and_drag());
-                let painter = ui.painter();
-
-                painter.rect_filled(rect, 0.0, egui::Color32::WHITE);
-
-                painter.rect_stroke(
-                    rect,
-                    0.0,
-                    egui::Stroke::new(1.0, egui::Color32::BLACK),
-                    egui::StrokeKind::Inside,
-                );
-
-               /* painter.text(
-                    rect.center(),
-                    egui::Align2::CENTER_CENTER,
-                    "Drawing Area",
-                    egui::FontId::default(),
-                    egui::Color32::GRAY,
-                );*/
-
 
                 egui::Frame::group(ui.style())
                     .inner_margin(0.0)
                     .show(ui, |ui| {
                         let scene = Scene::new()
-                            .max_inner_size([350.0, 1000.0])
-                            .zoom_range(0.1..=2.0);
+                            .max_inner_size([2000.0, 2000.0])
+                            .zoom_range(0.1..=4.0);
 
                         let mut reset_view = false;
                         let mut inner_rect = Rect::NAN;
                         let response = scene
-                            .show(ui, &mut self.scene_rect, |ui| {
+                            .show(ui, self.scene_rect, |ui| {
                                 reset_view = ui.button("Reset view").clicked();
 
-                                ui.add_space(1000.0);
-
-                                //self.widget_gallery.ui(ui);
-
-                                ui.put(
-                                    Rect::from_min_size(Pos2::new(0.0, -64.0), Vec2::new(200.0, 16.0)),
-                                    egui::Label::new("You can put a widget anywhere").selectable(false),
+                                let rect = Rect::from_min_size(
+                                    Pos2::new(0.0, 0.0),
+                                    Vec2::new(600.0, 400.0),
                                 );
+
+                                ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
+                                    ui.painter().rect_filled(
+                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(600.0, 400.0)),
+                                        0.0,
+                                        egui::Color32::LIGHT_BLUE,
+                                    );
+                                });
 
                                 inner_rect = ui.min_rect();
                             })
                             .response;
 
-                        /*if reset_view || response.double_clicked() {
-                            self.scene_rect = inner_rect;
-                        }*/
+                        if reset_view || response.double_clicked() {
+                            *self.scene_rect = inner_rect;
+                        }
                     });
-
-                if resp.clicked() {
-                    if let Some(pos) = resp.interact_pointer_pos() {
-                        println!("Clicked canvas at {:?}", pos);
-                    }
-                }
             }
 
             Panel::Tools => {
