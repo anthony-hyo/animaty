@@ -6,12 +6,46 @@ use egui_dock::egui::UiBuilder;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 use serde::{Deserialize, Serialize};
 
+type Drawing = Vec<Stroke>;
+
+#[derive(Serialize, Deserialize)]
+pub struct Timeline {
+    pub layers: Vec<Layer>,
+    pub current_frame: u32,
+    pub total_frames: u32,
+    pub fps: u32,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Layer {
+    pub name: String,
+    pub is_visible: bool,
+    //TODO: Is Locked Layer
+    //TODO: Is Guide Layer
+    pub keyframes: Vec<Keyframe>,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct Keyframe {
+    pub frame_number: u32,
+    pub drawing: Drawing,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct Stroke {
+    pub points: Vec<Pos2>,
+    //TODO: color
+    //TODO: thickness
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct RufflyState {
     project_name: String,
 
     canvas_width: f32,
     canvas_height: f32,
+
+    timeline: Timeline,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -70,6 +104,24 @@ impl Default for RufflyApp {
 
                 canvas_width: 800.0,
                 canvas_height: 600.0,
+
+                timeline: Timeline {
+                    layers: vec![
+                        Layer {
+                            name: "Layer 1".to_owned(),
+                            is_visible: true,
+                            keyframes: vec![
+                                Keyframe {
+                                    frame_number: 1,
+                                    drawing: Vec::new()
+                                }
+                            ]
+                        }
+                    ],
+                    current_frame: 1,
+                    total_frames: 30,
+                    fps: 24
+                }
             },
 
             scene_rect: Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 600.0)),

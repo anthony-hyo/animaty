@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 eframe = "0.32.1"
-egui_dock = "0.17.0"
+egui_dock = { version = "0.17.0", features = ["serde"] }
 rfd = "0.15.4"
 swf = "0.2.2"
 
