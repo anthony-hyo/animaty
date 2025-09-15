@@ -234,7 +234,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                 ui.horizontal(|ui| {
                     if ui.button("⏮").on_hover_text("Go to start").clicked() {
-                        println!("Timeline: back")
+                        self.state.timeline.current_frame = 1;
                     }
                     if ui.button("⏸").on_hover_text("Pause").clicked() {
                         println!("Timeline: pause");
@@ -245,7 +245,13 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     }
 
                     if ui.button("⏭").on_hover_text("Go to end").clicked() {
-                        println!("Timeline: end");
+                        let timeline = &mut self.state.timeline;
+
+                        timeline.current_frame += 1;
+
+                        if timeline.current_frame > timeline.total_frames {
+                            timeline.current_frame = timeline.total_frames;
+                        }
                     }
 
                     ui.separator();
