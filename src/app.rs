@@ -5,6 +5,12 @@ use eframe::egui::{Pos2, Rect, Scene, Vec2};
 use egui_dock::egui::UiBuilder;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 
+#[derive(Clone, Copy, PartialEq)]
+enum Tool {
+    Selection,
+    Pencil,
+}
+
 #[derive(Clone)]
 enum Panel {
     Canvas,
@@ -23,6 +29,8 @@ pub struct RufflyApp {
     canvas_height: f32,
 
     scene_rect: Rect,
+
+    active_tool: Tool
 }
 
 impl RufflyApp {
@@ -56,6 +64,8 @@ impl Default for RufflyApp {
             canvas_height: 600.0,
 
             scene_rect: Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 600.0)),
+
+            active_tool: Tool::Selection
         }
     }
 }
@@ -69,6 +79,8 @@ struct TabViewer<'a> {
     canvas_height: &'a mut f32,
 
     scene_rect: &'a mut Rect,
+
+    active_tool: &'a mut Tool
 }
 
 impl<'a> egui_dock::TabViewer for TabViewer<'a> {
@@ -98,6 +110,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                         let mut reset_view = false;
                         let mut inner_rect = Rect::NAN;
+
                         let response = scene
                             .show(ui, self.scene_rect, |ui| {
                                 reset_view = ui.button("Reset view").clicked();
@@ -109,9 +122,9 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                                 ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
                                     ui.painter().rect_filled(
-                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(600.0, 400.0)),
+                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(*self.canvas_width, *self.canvas_height)),
                                         0.0,
-                                        egui::Color32::LIGHT_BLUE,
+                                        egui::Color32::DARK_GRAY,
                                     );
                                 });
 
@@ -128,13 +141,13 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
             Panel::Tools => {
                 ui.label("Tools");
 
-                if ui.button("🖱").on_hover_text("Selection").clicked() {
-                    println!("Tool: Selection");
-                }
+                ui
+                    .selectable_value(self.active_tool, Tool::Selection, "🖱")
+                    .on_hover_text("Selection");
 
-                if ui.button("✏").on_hover_text("Pencil").clicked() {
-                    println!("Tool: Pencil");
-                }
+                ui
+                    .selectable_value(self.active_tool, Tool::Pencil, "✏")
+                    .on_hover_text("Pencil");
             }
 
             Panel::Properties => {
@@ -217,6 +230,8 @@ impl eframe::App for RufflyApp {
                     canvas_height: &mut self.canvas_height,
 
                     scene_rect: &mut self.scene_rect,
+
+                    active_tool: &mut self.active_tool
                 },
             );
     }
