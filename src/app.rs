@@ -1,8 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console in release on Windows
 
-use eframe::egui;
-use eframe::egui::{Pos2, Rect, Scene, Vec2};
-use egui_dock::egui::UiBuilder;
+use eframe::egui::{Pos2, Rect, Scene, Vec2, UiBuilder};
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 use serde::{Deserialize, Serialize};
 
@@ -162,12 +160,8 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
             Panel::Canvas => {
                 ui.vertical_centered(|ui| ui.heading("Canvas"));
 
-                egui::Frame::group(ui.style())
-                    .inner_margin(0.0)
-                    .show(ui, |ui| {
-                        let scene = Scene::new()
-                            .max_inner_size([2000.0, 2000.0])
-                            .zoom_range(0.1..=4.0);
+                egui::Frame::group(ui.style()).inner_margin(0.0).show(ui, |ui| {
+                    let scene = Scene::new().max_inner_size([2000.0, 2000.0]).zoom_range(0.1..=4.0);
 
                         let mut reset_view = false;
                         let mut inner_rect = Rect::NAN;
@@ -176,17 +170,17 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                             .show(ui, self.scene_rect, |ui| {
                                 reset_view = ui.button("Reset view").clicked();
 
-                                let rect = Rect::from_min_size(
+                        let rect = Rect::from_min_size(
                                     Pos2::new(0.0, 0.0),
                                     Vec2::new(600.0, 400.0),
-                                );
+                        );
 
                                 ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
                                     ui.painter().rect_filled(
                                         Rect::from_min_size(Pos2::ZERO, Vec2::new(*self.canvas_width, *self.canvas_height)),
                                         0.0,
                                         egui::Color32::DARK_GRAY,
-                                    );
+                                            );
                                 });
 
                                 inner_rect = ui.min_rect();
@@ -195,8 +189,8 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                         if reset_view || response.double_clicked() {
                             *self.scene_rect = inner_rect;
-                        }
-                    });
+                    }
+                });
             }
 
             Panel::Tools => {
@@ -267,6 +261,7 @@ impl eframe::App for RufflyApp {
                     if ui.button("New Project").clicked() {
                         println!("New project clicked!");
                     }
+
                     if ui.button("Open").clicked() {
                         println!("Open clicked!");
                     }
