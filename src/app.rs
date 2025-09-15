@@ -19,6 +19,17 @@ enum Panel {
     Timeline,
 }
 
+struct TabViewer<'a> {
+    project_name: &'a mut String,
+
+    canvas_width: &'a mut f32,
+    canvas_height: &'a mut f32,
+
+    scene_rect: &'a mut Rect,
+
+    active_tool: &'a mut Tool
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct RufflyState {
 	pub project_name: String,
@@ -97,17 +108,56 @@ impl Default for RufflyApp {
     }
 }
 
-/// A viewer that will receive mutable references only to the necessary app fields.
-/// This avoids borrow conflicts with `&mut self.tree`.
-struct TabViewer<'a> {
-    project_name: &'a mut String,
+impl eframe::App for RufflyApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // Top menu
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+            egui::MenuBar::new().ui(ui, |ui| {
+                ui.menu_button("File", |ui| {
+                    if ui.button("New Project").clicked() {
+                        println!("New project clicked!");
+                    }
 
-    canvas_width: &'a mut f32,
-    canvas_height: &'a mut f32,
+                    if ui.button("Open").clicked() {
+                        println!("Open clicked!");
+                    }
+                    if ui.button("Save").clicked() {
+                        if let Some(path) = rfd::FileDialog::new().add_filter("Ruffly Project", &["ruffly"]).save_file() {
+                            let json_data = serde_json::to_string_pretty(&self.state)
+                            .expect("Error serializing project state");
 
-    scene_rect: &'a mut Rect,
+                            if let Err(e) = std::fs::write(&path, json_data) {
+                                println!("Error saving the file: {}", e);
+                            } else {
+                                println!("Project saved successfully: {:?}", path);
+                            }
+                        }
+                    }
+                });
+                ui.menu_button("Help", |ui| {
+                    if ui.button("About").clicked() {
+                        println!("Ruffly v0.1 - Made with Rust!");
+                    }
+                });
+            });
+        });
 
-    active_tool: &'a mut Tool
+        DockArea::new(&mut self.tree)
+            .style(Style::from_egui(ctx.style().as_ref()))
+            .show(
+                ctx,
+                &mut TabViewer {
+                    project_name: &mut self.state.project_name,
+
+                    canvas_width: &mut self.state.canvas_width,
+                    canvas_height: &mut self.state.canvas_height,
+
+                    scene_rect: &mut self.scene_rect,
+
+                    active_tool: &mut self.active_tool
+                },
+            );
+    }
 }
 
 impl<'a> egui_dock::TabViewer for TabViewer<'a> {
@@ -217,57 +267,5 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
     fn on_close(&mut self, _tab: &mut Self::Tab) -> OnCloseResponse {
         // Behavior when a tab is closed (can ask the user, save, etc.)
         OnCloseResponse::Close
-    }
-}
-
-impl eframe::App for RufflyApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Top menu
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            egui::MenuBar::new().ui(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("New Project").clicked() {
-                        println!("New project clicked!");
-                    }
-
-                    if ui.button("Open").clicked() {
-                        println!("Open clicked!");
-                    }
-                    if ui.button("Save").clicked() {
-                        if let Some(path) = rfd::FileDialog::new().add_filter("Ruffly Project", &["ruffly"]).save_file() {
-                            let json_data = serde_json::to_string_pretty(&self.state)
-                            .expect("Error serializing project state");
-
-                            if let Err(e) = std::fs::write(&path, json_data) {
-                                println!("Error saving the file: {}", e);
-                            } else {
-                                println!("Project saved successfully: {:?}", path);
-                            }
-                        }
-                    }
-                });
-                ui.menu_button("Help", |ui| {
-                    if ui.button("About").clicked() {
-                        println!("Ruffly v0.1 - Made with Rust!");
-                    }
-                });
-            });
-        });
-
-        DockArea::new(&mut self.tree)
-            .style(Style::from_egui(ctx.style().as_ref()))
-            .show(
-                ctx,
-                &mut TabViewer {
-                    project_name: &mut self.state.project_name,
-
-                    canvas_width: &mut self.state.canvas_width,
-                    canvas_height: &mut self.state.canvas_height,
-
-                    scene_rect: &mut self.scene_rect,
-
-                    active_tool: &mut self.active_tool
-                },
-            );
     }
 }
