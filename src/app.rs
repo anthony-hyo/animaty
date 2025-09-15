@@ -4,6 +4,15 @@ use eframe::egui;
 use eframe::egui::{Pos2, Rect, Scene, Vec2};
 use egui_dock::egui::UiBuilder;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
+pub struct RufflyState {
+    project_name: String,
+
+    canvas_width: f32,
+    canvas_height: f32,
+}
 
 #[derive(Clone, Copy, PartialEq)]
 enum Tool {
@@ -23,10 +32,7 @@ enum Panel {
 pub struct RufflyApp {
     tree: DockState<Panel>,
 
-    project_name: String,
-
-    canvas_width: f32,
-    canvas_height: f32,
+    state: RufflyState,
 
     scene_rect: Rect,
 
@@ -58,10 +64,13 @@ impl Default for RufflyApp {
 
         Self {
             tree,
-            project_name: "New Project".to_owned(),
 
-            canvas_width: 800.0,
-            canvas_height: 600.0,
+            state: RufflyState {
+                project_name: "New Project".to_owned(),
+
+                canvas_width: 800.0,
+                canvas_height: 600.0,
+            },
 
             scene_rect: Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 600.0)),
 
@@ -210,7 +219,16 @@ impl eframe::App for RufflyApp {
                         println!("Open clicked!");
                     }
                     if ui.button("Save").clicked() {
-                        println!("Save clicked!");
+                        if let Some(path) = rfd::FileDialog::new().add_filter("Ruffly Project", &["ruffly"]).save_file() {
+                            let json_data = serde_json::to_string_pretty(&self.state)
+                            .expect("Error serializing project state");
+
+                            if let Err(e) = std::fs::write(&path, json_data) {
+                                println!("Error saving the file: {}", e);
+                            } else {
+                                println!("Project saved successfully: {:?}", path);
+                            }
+                        }
                     }
                 });
                 ui.menu_button("Help", |ui| {
@@ -226,10 +244,10 @@ impl eframe::App for RufflyApp {
             .show(
                 ctx,
                 &mut TabViewer {
-                    project_name: &mut self.project_name,
+                    project_name: &mut self.state.project_name,
 
-                    canvas_width: &mut self.canvas_width,
-                    canvas_height: &mut self.canvas_height,
+                    canvas_width: &mut self.state.canvas_width,
+                    canvas_height: &mut self.state.canvas_height,
 
                     scene_rect: &mut self.scene_rect,
 
