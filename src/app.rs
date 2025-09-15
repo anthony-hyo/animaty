@@ -20,24 +20,21 @@ enum Panel {
 }
 
 struct TabViewer<'a> {
-    project_name: &'a mut String,
-
-    canvas_width: &'a mut f32,
-    canvas_height: &'a mut f32,
+    state:  &'a mut RufflyState,
 
     scene_rect: &'a mut Rect,
 
-    active_tool: &'a mut Tool
+    active_tool: &'a mut Tool,
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct RufflyState {
-	pub project_name: String,
+struct RufflyState {
+	project_name: String,
 
-	pub canvas_width: f32,
-	pub canvas_height: f32,
+	canvas_width: f32,
+	canvas_height: f32,
 
-	pub timeline: Timeline,
+	timeline: Timeline,
 }
 
 pub struct RufflyApp {
@@ -147,14 +144,11 @@ impl eframe::App for RufflyApp {
             .show(
                 ctx,
                 &mut TabViewer {
-                    project_name: &mut self.state.project_name,
-
-                    canvas_width: &mut self.state.canvas_width,
-                    canvas_height: &mut self.state.canvas_height,
+                    state: &mut self.state,
 
                     scene_rect: &mut self.scene_rect,
 
-                    active_tool: &mut self.active_tool
+                    active_tool: &mut self.active_tool,
                 },
             );
     }
@@ -195,7 +189,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                                 ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
                                     ui.painter().rect_filled(
-                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(*self.canvas_width, *self.canvas_height)),
+                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(*&mut self.state.canvas_width, *&mut self.state.canvas_height)),
                                         0.0,
                                         egui::Color32::DARK_GRAY,
                                             );
@@ -228,11 +222,11 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                 ui.horizontal(|ui| {
                     ui.label("Project:");
-                    ui.text_edit_singleline(self.project_name);
+                    ui.text_edit_singleline(&mut self.state.project_name);
                 });
 
-                ui.add(egui::Slider::new(self.canvas_width, 100.0..=1920.0).text("Width"));
-                ui.add(egui::Slider::new(self.canvas_height, 100.0..=1080.0).text("Height"));
+                ui.add(egui::Slider::new(&mut self.state.canvas_width, 100.0..=1920.0).text("Width"));
+                ui.add(egui::Slider::new(&mut self.state.canvas_height, 100.0..=1080.0).text("Height"));
             }
 
             Panel::Timeline => {
@@ -255,7 +249,9 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     }
 
                     ui.separator();
-                    ui.label("Frame: 1 / 30");
+
+                    let timeline_state = &self.state.timeline;
+                    ui.label(format!("Frame: {} / {}", timeline_state.current_frame, timeline_state.total_frames));
                 });
             }
             Panel::Library => {
