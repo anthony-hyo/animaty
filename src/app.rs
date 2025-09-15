@@ -185,7 +185,9 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     ui.label("Frame: 1 / 30");
                 });
             }
-            &mut Panel::Library => todo!(),
+            Panel::Library => {
+                ui.label("Timeline");
+            },
         }
     }
 
