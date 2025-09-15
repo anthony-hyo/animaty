@@ -1,7 +1,10 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use std::error::Error;
 use eframe::{egui::{Style, Visuals, ViewportBuilder}, App, CreationContext};
 
 mod app;
+mod project;
 
 fn main() -> Result<(), eframe::Error> {
     let native_options = eframe::NativeOptions {
