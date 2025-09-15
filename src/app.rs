@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::project::timeline::{Keyframe, Layer, Timeline};
 
+use std::io::Read;
+
 #[derive(Clone, Copy, PartialEq)]
 enum Tool {
     Selection,
@@ -118,6 +120,49 @@ impl eframe::App for RufflyApp {
                     if ui.button("Open").clicked() {
                         println!("Open clicked!");
                     }
+
+                    if ui.button("Import .fla...").clicked() {
+                        if let Some(path) = rfd::FileDialog::new().add_filter("Flash Project", &["fla"]).pick_file() {
+                            println!("Attempting to import FLA: {:?}", path);
+
+                            let file = match std::fs::File::open(&path) {
+                                Ok(f) => f,
+                                Err(e) => {
+                                    eprintln!("Error opening file: {}", e);
+                                    return;
+                                }
+                            };
+
+                            let mut archive = match zip::ZipArchive::new(file) {
+                                Ok(a) => a,
+                                Err(e) => {
+                                    eprintln!("Error reading as ZIP archive (is this a modern .fla file?): {}", e);
+                                    return;
+                                }
+                            };
+
+                            match archive.by_name("DOMDocument.xml") {
+                                Ok(mut xml_file) => {
+                                    let mut xml_content = String::new();
+
+                                    if let Err(e) = xml_file.read_to_string(&mut xml_content) {
+                                        eprintln!("Error reading DOMDocument.xml content: {}", e);
+                                        return;
+                                    }
+
+                                    println!("--- DOMDocument.xml Content ---");
+                                    println!("{}", xml_content);
+                                    println!("-----------------------------");
+                                    println!("Successfully read DOMDocument.xml from .fla file!");
+
+                                }
+                                Err(_) => {
+                                    eprintln!("Error: DOMDocument.xml not found inside the .fla file.");
+                                }
+                            }
+                        }
+                    }
+
                     if ui.button("Save").clicked() {
                         if let Some(path) = rfd::FileDialog::new().add_filter("Ruffly Project", &["ruffly"]).save_file() {
                             let json_data = serde_json::to_string_pretty(&self.state)
