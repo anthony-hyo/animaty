@@ -88,15 +88,15 @@ impl Default for RufflyApp {
                 timeline: Timeline {
                     layers: vec![
                         Layer {
-                        name: "Layer 1".to_owned(),
+                            name: "Layer 1".to_owned(),
                             is_visible: true,
                             keyframes: vec![
                                 Keyframe {
-                            frame_number: 1,
+                                    frame_number: 1,
                                     drawing: Vec::new()
-                        }
+                                }
                             ]
-                    }
+                        }
                     ],
                     current_frame: 1,
                     total_frames: 30,
