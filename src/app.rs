@@ -307,6 +307,21 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
             }
             Panel::Library => {
                 ui.label("Timeline");
+
+                TreeView::new(Id::new("tree view2")).show(ui, |builder| {
+                    builder.dir(0, "Root");
+                    builder.leaf(1, "Ava");
+                    builder.leaf(2, "Benjamin");
+                    builder.leaf(3, "Charlotte");
+                    builder.close_dir();
+
+                    builder.dir(4, "Root2");
+                    builder.leaf(5, "Ava");
+                    builder.leaf(6, "Benjamin");
+                    builder.leaf(7, "Charlotte");
+
+                    builder.close_dir();
+                });
             },
         }
     }
