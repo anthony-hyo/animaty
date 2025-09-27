@@ -1,10 +1,14 @@
-use eframe::egui::{Pos2, Rect, Scene, Vec2, UiBuilder};
+use eframe::egui::{Pos2, Rect, Scene, Vec2, UiBuilder, Id};
+use egui_ltreeview::TreeView;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
+use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
+use quick_xml::{de, events::Event};
+use quick_xml::reader::Reader;
 
-use crate::project::timeline::{Keyframe, Layer, Timeline};
+use crate::project::{dom_document::DOMDocument, timeline::{Keyframe, Layer, Timeline}};
 
-use std::io::Read;
+use std::{io::Read, str};
 
 #[derive(Clone, Copy, PartialEq)]
 enum Tool {
@@ -84,15 +88,15 @@ impl Default for RufflyApp {
                 timeline: Timeline {
                     layers: vec![
                         Layer {
-                            name: "Layer 1".to_owned(),
+                        name: "Layer 1".to_owned(),
                             is_visible: true,
                             keyframes: vec![
                                 Keyframe {
-                                    frame_number: 1,
+                            frame_number: 1,
                                     drawing: Vec::new()
-                                }
-                            ]
                         }
+                            ]
+                    }
                     ],
                     current_frame: 1,
                     total_frames: 30,
@@ -150,11 +154,17 @@ impl eframe::App for RufflyApp {
                                         return;
                                     }
 
-                                    println!("--- DOMDocument.xml Content ---");
-                                    println!("{}", xml_content);
-                                    println!("-----------------------------");
-                                    println!("Successfully read DOMDocument.xml from .fla file!");
+                                    let dom_document: DOMDocument = match from_str(&xml_content) {
+                                        Ok(doc) => {
+                                            doc
+                                        },
+                                        Err(e) => {
+                                            eprintln!("Error deserializing DOMDocument.xml: {}", e);
+                                            return;
+                                        }
+                                    };
 
+                                    println!("DOMDocument: {:#?}", dom_document);
                                 }
                                 Err(_) => {
                                     eprintln!("Error: DOMDocument.xml not found inside the .fla file.");
@@ -305,6 +315,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     ui.label(format!("Frame: {} / {}", timeline_state.current_frame, timeline_state.total_frames));
                 });
             }
+
             Panel::Library => {
                 ui.label("Timeline");
 
