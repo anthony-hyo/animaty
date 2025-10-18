@@ -38,18 +38,43 @@ pub struct DOMDocument {
     #[serde(rename = "@folders")]
     pub folders: Option<DOMDocumentFolders>,
     #[serde(rename = "@symbols")]
-    pub symbols: Option<DOMDocumentFolders>,
+    pub symbols: Option<DOMDocumentSymbols>,
     #[serde(rename = "@timelines")]
-    pub timelines: Option<DOMDocumentFolders>,
+    pub timelines: Option<DOMDocumentTimelines>,
     #[serde(rename = "@persistentData")]
-    pub persistent_data: Option<DOMDocumentFolders>,
+    pub persistent_data: Option<DOMDocumentPersistentData>,
     #[serde(rename = "@PrinterSettings")]
-    pub printer_settings: Option<DOMDocumentFolders>,
+    pub printer_settings: Option<DOMDocumentPrinterSettings>,
     #[serde(rename = "@publishHistory")]
-    pub publish_history: Option<DOMDocumentFolders>,
+    pub publish_history: Option<DOMDocumentPublishHistory>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMDocumentFolders {
+
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+pub struct DOMDocumentSymbols {
+
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+pub struct DOMDocumentTimelines {
+
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+pub struct DOMDocumentPersistentData {
+
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+pub struct DOMDocumentPrinterSettings {
+
+}
+
+#[derive(Debug, Deserialize, Serialize, PartialEq)]
+pub struct DOMDocumentPublishHistory {
 
 }

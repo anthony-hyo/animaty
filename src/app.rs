@@ -3,12 +3,10 @@ use egui_ltreeview::TreeView;
 use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
-use quick_xml::{de, events::Event};
-use quick_xml::reader::Reader;
 
 use crate::project::{dom_document::DOMDocument, timeline::{Keyframe, Layer, Timeline}};
 
-use std::{io::Read, str};
+use std::{fs, io::Read, str};
 
 #[derive(Clone, Copy, PartialEq)]
 enum Tool {
@@ -147,12 +145,18 @@ impl eframe::App for AnimatyApp {
 
                             match archive.by_name("DOMDocument.xml") {
                                 Ok(mut xml_file) => {
-                                    let mut xml_content = String::new();
+                                    let mut xml_content: String = String::new();
 
                                     if let Err(e) = xml_file.read_to_string(&mut xml_content) {
                                         eprintln!("Error reading DOMDocument.xml content: {}", e);
                                         return;
                                     }
+
+                                    // TODO: Temporary
+                                    fs::write("output.txt", &xml_content)
+                                        .expect("Unable to write file");
+
+                                    println!("DOMDocument raw");
 
                                     let dom_document: DOMDocument = match from_str(&xml_content) {
                                         Ok(doc) => {
@@ -164,7 +168,7 @@ impl eframe::App for AnimatyApp {
                                         }
                                     };
 
-                                    println!("DOMDocument: {:#?}", dom_document);
+                                    println!("DOMDocument parsed: {:#?}", dom_document);
                                 }
                                 Err(_) => {
                                     eprintln!("Error: DOMDocument.xml not found inside the .fla file.");
