@@ -1,7 +1,10 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use eframe::{
+    App, CreationContext,
+    egui::{Style, ViewportBuilder, Visuals},
+};
 use std::error::Error;
-use eframe::{egui::{Style, Visuals, ViewportBuilder}, App, CreationContext};
 
 mod app;
 mod project;

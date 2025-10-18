@@ -50,31 +50,19 @@ pub struct DOMDocument {
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentFolders {
-
-}
+pub struct DOMDocumentFolders {}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentSymbols {
-
-}
+pub struct DOMDocumentSymbols {}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentTimelines {
-
-}
+pub struct DOMDocumentTimelines {}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentPersistentData {
-
-}
+pub struct DOMDocumentPersistentData {}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentPrinterSettings {
-
-}
+pub struct DOMDocumentPrinterSettings {}
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOMDocumentPublishHistory {
-
-}
+pub struct DOMDocumentPublishHistory {}

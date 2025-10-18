@@ -1,10 +1,13 @@
-use eframe::egui::{Pos2, Rect, Scene, Vec2, UiBuilder, Id};
+use eframe::egui::{Id, Pos2, Rect, Scene, UiBuilder, Vec2};
+use egui_dock::{DockArea, DockState, NodeIndex, Style, tab_viewer::OnCloseResponse};
 use egui_ltreeview::TreeView;
-use egui_dock::{tab_viewer::OnCloseResponse, DockArea, DockState, NodeIndex, Style};
 use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
 
-use crate::project::{dom_document::DOMDocument, timeline::{Keyframe, Layer, Timeline}};
+use crate::project::{
+    dom_document::DOMDocument,
+    timeline::{Keyframe, Layer, Timeline},
+};
 
 use std::{fs, io::Read, str};
 
@@ -24,7 +27,7 @@ enum Panel {
 }
 
 struct TabViewer<'a> {
-    state:  &'a mut AnimatyState,
+    state: &'a mut AnimatyState,
 
     scene_rect: &'a mut Rect,
 
@@ -33,12 +36,12 @@ struct TabViewer<'a> {
 
 #[derive(Serialize, Deserialize)]
 struct AnimatyState {
-	project_name: String,
+    project_name: String,
 
-	canvas_width: f32,
-	canvas_height: f32,
+    canvas_width: f32,
+    canvas_height: f32,
 
-	timeline: Timeline,
+    timeline: Timeline,
 }
 
 pub struct AnimatyApp {
@@ -48,7 +51,7 @@ pub struct AnimatyApp {
 
     scene_rect: Rect,
 
-    active_tool: Tool
+    active_tool: Tool,
 }
 
 impl AnimatyApp {
@@ -65,14 +68,17 @@ impl Default for AnimatyApp {
     fn default() -> Self {
         let mut tree = DockState::new(vec![Panel::Canvas]);
 
-        let [old, _new] = tree.main_surface_mut()
-            .split_left(NodeIndex::root(), 0.20, vec![Panel::Tools]);
+        let [old, _new] =
+            tree.main_surface_mut()
+                .split_left(NodeIndex::root(), 0.20, vec![Panel::Tools]);
 
-        let [_old, _new] = tree.main_surface_mut()
+        let [_old, _new] = tree
+            .main_surface_mut()
             .split_below(old, 0.85, vec![Panel::Timeline]);
 
-        let [_old, _new] = tree.main_surface_mut()
-            .split_right(old, 0.6, vec![Panel::Properties, Panel::Library]);
+        let [_old, _new] =
+            tree.main_surface_mut()
+                .split_right(old, 0.6, vec![Panel::Properties, Panel::Library]);
 
         Self {
             tree,
@@ -84,27 +90,23 @@ impl Default for AnimatyApp {
                 canvas_height: 600.0,
 
                 timeline: Timeline {
-                    layers: vec![
-                        Layer {
-                            name: "Layer 1".to_owned(),
-                            is_visible: true,
-                            keyframes: vec![
-                                Keyframe {
-                                    frame_number: 1,
-                                    drawing: Vec::new()
-                                }
-                            ]
-                        }
-                    ],
+                    layers: vec![Layer {
+                        name: "Layer 1".to_owned(),
+                        is_visible: true,
+                        keyframes: vec![Keyframe {
+                            frame_number: 1,
+                            drawing: Vec::new(),
+                        }],
+                    }],
                     current_frame: 1,
                     total_frames: 30,
-                    fps: 24
-                }
+                    fps: 24,
+                },
             },
 
             scene_rect: Rect::from_min_size(Pos2::ZERO, Vec2::new(800.0, 600.0)),
 
-            active_tool: Tool::Selection
+            active_tool: Tool::Selection,
         }
     }
 }
@@ -231,8 +233,12 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
             Panel::Canvas => {
                 ui.vertical_centered(|ui| ui.heading("Canvas"));
 
-                egui::Frame::group(ui.style()).inner_margin(0.0).show(ui, |ui| {
-                    let scene = Scene::new().max_inner_size([2000.0, 2000.0]).zoom_range(0.1..=4.0);
+                egui::Frame::group(ui.style())
+                    .inner_margin(0.0)
+                    .show(ui, |ui| {
+                        let scene = Scene::new()
+                            .max_inner_size([2000.0, 2000.0])
+                            .zoom_range(0.1..=4.0);
 
                         let mut reset_view = false;
                         let mut inner_rect = Rect::NAN;
@@ -241,17 +247,23 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                             .show(ui, self.scene_rect, |ui| {
                                 reset_view = ui.button("Reset view").clicked();
 
-                        let rect = Rect::from_min_size(
+                                let rect = Rect::from_min_size(
                                     Pos2::new(0.0, 0.0),
                                     Vec2::new(600.0, 400.0),
-                        );
+                                );
 
                                 ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
                                     ui.painter().rect_filled(
-                                        Rect::from_min_size(Pos2::ZERO, Vec2::new(*&mut self.state.canvas_width, *&mut self.state.canvas_height)),
+                                        Rect::from_min_size(
+                                            Pos2::ZERO,
+                                            Vec2::new(
+                                                *&mut self.state.canvas_width,
+                                                *&mut self.state.canvas_height,
+                                            ),
+                                        ),
                                         0.0,
                                         egui::Color32::DARK_GRAY,
-                                            );
+                                    );
                                 });
 
                                 inner_rect = ui.min_rect();
@@ -260,19 +272,17 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                         if reset_view || response.double_clicked() {
                             *self.scene_rect = inner_rect;
-                    }
-                });
+                        }
+                    });
             }
 
             Panel::Tools => {
                 ui.label("Tools");
 
-                ui
-                    .selectable_value(self.active_tool, Tool::Selection, "🖱")
+                ui.selectable_value(self.active_tool, Tool::Selection, "🖱")
                     .on_hover_text("Selection");
 
-                ui
-                    .selectable_value(self.active_tool, Tool::Pencil, "✏")
+                ui.selectable_value(self.active_tool, Tool::Pencil, "✏")
                     .on_hover_text("Pencil");
             }
 
@@ -284,8 +294,12 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     ui.text_edit_singleline(&mut self.state.project_name);
                 });
 
-                ui.add(egui::Slider::new(&mut self.state.canvas_width, 100.0..=1920.0).text("Width"));
-                ui.add(egui::Slider::new(&mut self.state.canvas_height, 100.0..=1080.0).text("Height"));
+                ui.add(
+                    egui::Slider::new(&mut self.state.canvas_width, 100.0..=1920.0).text("Width"),
+                );
+                ui.add(
+                    egui::Slider::new(&mut self.state.canvas_height, 100.0..=1080.0).text("Height"),
+                );
             }
 
             Panel::Timeline => {
@@ -316,7 +330,11 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
                     ui.separator();
 
                     let timeline_state = &self.state.timeline;
-                    ui.label(format!("Frame: {} / {}", timeline_state.current_frame, timeline_state.total_frames));
+
+                    ui.label(format!(
+                        "Frame: {} / {}",
+                        timeline_state.current_frame, timeline_state.total_frames
+                    ));
                 });
             }
 
@@ -337,7 +355,7 @@ impl<'a> egui_dock::TabViewer for TabViewer<'a> {
 
                     builder.close_dir();
                 });
-            },
+            }
         }
     }
 
