@@ -26,7 +26,7 @@ enum Panel {
 }
 
 struct TabViewer<'a> {
-    state:  &'a mut RufflyState,
+    state:  &'a mut AnimatyState,
 
     scene_rect: &'a mut Rect,
 
@@ -34,7 +34,7 @@ struct TabViewer<'a> {
 }
 
 #[derive(Serialize, Deserialize)]
-struct RufflyState {
+struct AnimatyState {
 	project_name: String,
 
 	canvas_width: f32,
@@ -43,17 +43,17 @@ struct RufflyState {
 	timeline: Timeline,
 }
 
-pub struct RufflyApp {
+pub struct AnimatyApp {
     tree: DockState<Panel>,
 
-    state: RufflyState,
+    state: AnimatyState,
 
     scene_rect: Rect,
 
     active_tool: Tool
 }
 
-impl RufflyApp {
+impl AnimatyApp {
     pub(crate) fn new(_creation_context: &eframe::CreationContext<'_>) -> Self {
         // Customize egui here with cc.egui_ctx.set_fonts and cc.egui_ctx.set_visuals.
         // Restore app state using cc.storage (requires the "persistence" feature).
@@ -63,7 +63,7 @@ impl RufflyApp {
     }
 }
 
-impl Default for RufflyApp {
+impl Default for AnimatyApp {
     fn default() -> Self {
         let mut tree = DockState::new(vec![Panel::Canvas]);
 
@@ -79,7 +79,7 @@ impl Default for RufflyApp {
         Self {
             tree,
 
-            state: RufflyState {
+            state: AnimatyState {
                 project_name: "New Project".to_owned(),
 
                 canvas_width: 800.0,
@@ -111,7 +111,7 @@ impl Default for RufflyApp {
     }
 }
 
-impl eframe::App for RufflyApp {
+impl eframe::App for AnimatyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Top menu
         egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
@@ -174,7 +174,7 @@ impl eframe::App for RufflyApp {
                     }
 
                     if ui.button("Save").clicked() {
-                        if let Some(path) = rfd::FileDialog::new().add_filter("Ruffly Project", &["ruffly"]).save_file() {
+                        if let Some(path) = rfd::FileDialog::new().add_filter("Animaty Project", &["animty"]).save_file() {
                             let json_data = serde_json::to_string_pretty(&self.state)
                             .expect("Error serializing project state");
 
@@ -188,7 +188,7 @@ impl eframe::App for RufflyApp {
                 });
                 ui.menu_button("Help", |ui| {
                     if ui.button("About").clicked() {
-                        println!("Ruffly v0.1 - Made with Rust!");
+                        println!("Animaty v0.1 - Made with Rust!");
                     }
                 });
             });

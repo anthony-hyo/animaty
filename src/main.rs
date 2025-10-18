@@ -13,7 +13,7 @@ fn main() -> Result<(), eframe::Error> {
     };
 
     eframe::run_native(
-        "Ruffly v0.1",
+        "Animaty v0.1",
         native_options,
          
          Box::new(|creation_context: &CreationContext| -> Result<Box<dyn App>, Box<dyn Error + Send + Sync>> {
@@ -24,7 +24,7 @@ fn main() -> Result<(), eframe::Error> {
 
             creation_context.egui_ctx.set_style(style);
 
-            Ok(Box::new(app::RufflyApp::new(creation_context)))
+            Ok(Box::new(app::AnimatyApp::new(creation_context)))
         }),
     )
 }
