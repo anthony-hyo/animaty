@@ -1,2 +1,4 @@
-pub mod dom_document;
+pub mod dom;
 pub mod timeline;
+
+pub use dom::DOM;
