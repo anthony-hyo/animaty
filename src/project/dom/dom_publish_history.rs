@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMPublishHistory {
     #[serde(rename = "PublishItem", default)]
-    pub publish_items: Vec<PublishItem>,
+    pub items: Vec<PublishItem>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]

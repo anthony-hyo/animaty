@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMFolders {
     #[serde(rename = "DOMFolderItem", default)]
-    pub folder: Vec<FolderItem>,
+    pub items: Vec<FolderItem>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]

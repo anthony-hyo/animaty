@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMPersistentData {
     #[serde(rename = "PD", default)]
-    pub data: Vec<PersistentDataItem>,
+    pub items: Vec<PersistentDataItem>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
