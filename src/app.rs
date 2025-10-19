@@ -181,10 +181,6 @@ impl eframe::App for AnimatyApp {
 									).expect("Unable to write file");
 
 									println!("DOMDocument parsed");
-
-									if let Some(timelines) = &dom_document.timelines {
-										println!("Layers count: {}", timelines.timelines[0].layers.len());
-									}
 								}
 								Err(_) => {
 									eprintln!("Error: DOMDocument.xml not found inside the .fla file.");
