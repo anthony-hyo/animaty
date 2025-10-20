@@ -8,6 +8,7 @@ use std::error::Error;
 
 mod app;
 mod project;
+mod ui;
 
 fn main() -> Result<(), eframe::Error> {
     let native_options = eframe::NativeOptions {
@@ -18,7 +19,7 @@ fn main() -> Result<(), eframe::Error> {
     eframe::run_native(
         "Animaty v0.1",
         native_options,
-         
+
          Box::new(|creation_context: &CreationContext| -> Result<Box<dyn App>, Box<dyn Error + Send + Sync>> {
             let style: Style = Style {
                 visuals: Visuals::dark(),
