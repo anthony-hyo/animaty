@@ -5,7 +5,7 @@ use quick_xml::de::from_str;
 use serde::{Deserialize, Serialize};
 
 use crate::project::{
-    DOM,
+    DOMDocument,
     timeline::{Keyframe, Layer, Timeline},
 };
 
@@ -160,7 +160,7 @@ impl eframe::App for AnimatyApp {
 
 									println!("DOMDocument raw");
 
-									let dom_document: DOM = match from_str(&xml_content) {
+									let dom_document: DOMDocument = match from_str(&xml_content) {
 										Ok(doc) => {
 											doc
 										}

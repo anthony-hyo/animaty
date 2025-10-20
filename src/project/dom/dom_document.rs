@@ -2,14 +2,14 @@ use crate::project::dom::{
     dom_extended_swatch_lists::DOMExtendedSwatchLists, dom_folder::DOMFolders, dom_font::DOMFonts,
     dom_media::DOMMedia, dom_persistent_data::DOMPersistentData,
     dom_printer_setting::DOMPrinterSettings, dom_publish_history::DOMPublishHistory,
-    dom_swatch_lists::DOMSwatchLists, dom_symbol::DOMSymbols,
+    dom_swatch_lists::DOMSwatchLists, dom_swc_cache::DOMSwcCache, dom_symbol::DOMSymbols,
     dom_timeline::dom_timeline::DOMTimelines,
 };
 
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
-pub struct DOM {
+pub struct DOMDocument {
     #[serde(rename = "@backgroundColor", skip_serializing_if = "Option::is_none")]
     pub background_color: Option<String>,
 
@@ -86,4 +86,7 @@ pub struct DOM {
 
     #[serde(rename = "publishHistory", default)]
     pub publish_history: Option<DOMPublishHistory>,
+
+    #[serde(rename = "swcCache", default)]
+    pub swc_sache: Option<DOMSwcCache>,
 }
