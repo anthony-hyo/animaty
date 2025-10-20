@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMGroup {
-    #[serde(rename = "members")]
+    #[serde(rename = "members", skip_serializing_if = "Option::is_none")]
     pub members: Option<Member>,
 }
 

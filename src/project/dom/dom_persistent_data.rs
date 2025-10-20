@@ -8,9 +8,9 @@ pub struct DOMPersistentData {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PersistentDataItem {
-    #[serde(rename = "@n")]
+    #[serde(rename = "@n", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(rename = "@v")]
+    #[serde(rename = "@v", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }

@@ -8,9 +8,9 @@ pub struct SoundEnvelope {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SoundEnvelopePoint {
-    #[serde(rename = "@level0")]
+    #[serde(rename = "@level0", skip_serializing_if = "Option::is_none")]
     pub level0: Option<u32>,
 
-    #[serde(rename = "@level1")]
+    #[serde(rename = "@level1", skip_serializing_if = "Option::is_none")]
     pub level1: Option<u32>,
 }

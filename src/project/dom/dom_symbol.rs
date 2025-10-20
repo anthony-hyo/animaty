@@ -8,18 +8,18 @@ pub struct DOMSymbols {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SymbolInclude {
-    #[serde(rename = "@href")]
+    #[serde(rename = "@href", skip_serializing_if = "Option::is_none")]
     pub href: Option<String>,
 
-    #[serde(rename = "@loadImmediate")]
+    #[serde(rename = "@loadImmediate", skip_serializing_if = "Option::is_none")]
     pub load_immediate: Option<bool>,
 
-    #[serde(rename = "@itemID")]
+    #[serde(rename = "@itemID", skip_serializing_if = "Option::is_none")]
     pub item_id: Option<String>,
 
-    #[serde(rename = "@itemIcon")]
+    #[serde(rename = "@itemIcon", skip_serializing_if = "Option::is_none")]
     pub item_icon: Option<u32>,
 
-    #[serde(rename = "@lastModified")]
+    #[serde(rename = "@lastModified", skip_serializing_if = "Option::is_none")]
     pub last_modified: Option<u32>,
 }

@@ -3,22 +3,22 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMShape {
-    #[serde(rename = "@isFloating")]
+    #[serde(rename = "@isFloating", skip_serializing_if = "Option::is_none")]
     pub is_floating: Option<bool>,
 
-    #[serde(rename = "@selected")]
+    #[serde(rename = "@selected", skip_serializing_if = "Option::is_none")]
     pub selected: Option<bool>,
 
-    #[serde(rename = "matrix")]
+    #[serde(rename = "matrix", skip_serializing_if = "Option::is_none")]
     pub matrix: Option<Matrices>,
 
-    #[serde(rename = "fills")]
+    #[serde(rename = "fills", skip_serializing_if = "Option::is_none")]
     pub fills: Option<FillsContainer>,
 
-    #[serde(rename = "strokes")]
+    #[serde(rename = "strokes", skip_serializing_if = "Option::is_none")]
     pub strokes: Option<StrokesContainer>,
 
-    #[serde(rename = "edges")]
+    #[serde(rename = "edges", skip_serializing_if = "Option::is_none")]
     pub edges: Option<EdgesContainer>,
 }
 
@@ -30,30 +30,30 @@ pub struct StrokesContainer {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct StrokeStyle {
-    #[serde(rename = "@index")]
+    #[serde(rename = "@index", skip_serializing_if = "Option::is_none")]
     pub index: Option<u32>,
 
-    #[serde(rename = "SolidStroke")]
+    #[serde(rename = "SolidStroke", skip_serializing_if = "Option::is_none")]
     pub solid_stroke: Option<SolidStroke>,
 }
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SolidStroke {
-    #[serde(rename = "@scaleMode")]
+    #[serde(rename = "@scaleMode", skip_serializing_if = "Option::is_none")]
     pub scale_mode: Option<String>,
 
-    #[serde(rename = "fill")]
+    #[serde(rename = "fill", skip_serializing_if = "Option::is_none")]
     pub fill: Option<SolidStrokeFill>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SolidStrokeFill {
-    #[serde(rename = "SolidColor")]
+    #[serde(rename = "SolidColor", skip_serializing_if = "Option::is_none")]
     pub solid_color: Option<SolidColor>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SolidColor {
-    #[serde(rename = "@color")]
+    #[serde(rename = "@color", skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
 }
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
@@ -64,16 +64,16 @@ pub struct EdgesContainer {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Edge {
-    #[serde(rename = "@fillStyle0")]
+    #[serde(rename = "@fillStyle0", skip_serializing_if = "Option::is_none")]
     pub fill_style_0: Option<String>,
 
-    #[serde(rename = "@fillStyle1")]
+    #[serde(rename = "@fillStyle1", skip_serializing_if = "Option::is_none")]
     pub fill_style_1: Option<String>,
 
-    #[serde(rename = "@strokeStyle")]
+    #[serde(rename = "@strokeStyle", skip_serializing_if = "Option::is_none")]
     pub stroke_style: Option<String>,
 
-    #[serde(rename = "@edges")]
+    #[serde(rename = "@edges", skip_serializing_if = "Option::is_none")]
     pub edges: Option<String>,
 }
 
@@ -85,9 +85,9 @@ pub struct FillsContainer {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct FillStyle {
-    #[serde(rename = "@index")]
+    #[serde(rename = "@index", skip_serializing_if = "Option::is_none")]
     pub index: Option<u32>,
 
-    #[serde(rename = "SolidColor")]
+    #[serde(rename = "SolidColor", skip_serializing_if = "Option::is_none")]
     pub solid_color: Option<SolidColor>,
 }

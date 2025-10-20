@@ -9,10 +9,10 @@ pub struct DOMExtendedSwatchLists {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SwatchList {
-    #[serde(rename = "swatchListInfo")]
+    #[serde(rename = "swatchListInfo", skip_serializing_if = "Option::is_none")]
     pub swatch_list_info: Option<SwatchListInfo>,
 
-    #[serde(rename = "swatches")]
+    #[serde(rename = "swatches", skip_serializing_if = "Option::is_none")]
     pub swatches: Option<SwatchesContainer>,
 }
 
@@ -43,12 +43,12 @@ pub struct SwatchItem {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct GradientEntry {
-    #[serde(rename = "@color")]
+    #[serde(rename = "@color", skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
 
-    #[serde(rename = "@ratio")]
+    #[serde(rename = "@ratio", skip_serializing_if = "Option::is_none")]
     pub ratio: Option<f64>,
 
-    #[serde(rename = "@alpha")]
+    #[serde(rename = "@alpha", skip_serializing_if = "Option::is_none")]
     pub alpha: Option<f64>,
 }

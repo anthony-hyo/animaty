@@ -8,27 +8,33 @@ pub struct DOMFonts {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct FontItem {
-    #[serde(rename = "@name")]
+    #[serde(rename = "@name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(rename = "@itemID")]
+    #[serde(rename = "@itemID", skip_serializing_if = "Option::is_none")]
     pub item_id: Option<String>,
 
-    #[serde(rename = "@font")]
+    #[serde(rename = "@font", skip_serializing_if = "Option::is_none")]
     pub font: Option<String>,
 
-    #[serde(rename = "@size")]
+    #[serde(rename = "@size", skip_serializing_if = "Option::is_none")]
     pub size: Option<u32>,
 
-    #[serde(rename = "@id")]
+    #[serde(rename = "@id", skip_serializing_if = "Option::is_none")]
     pub id: Option<u32>,
 
-    #[serde(rename = "@sourceLastImported")]
+    #[serde(
+        rename = "@sourceLastImported",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub source_last_imported: Option<u32>,
 
-    #[serde(rename = "@embeddedCharacters")]
+    #[serde(
+        rename = "@embeddedCharacters",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub embedded_characters: Option<String>,
 
-    #[serde(rename = "@embedRanges")]
+    #[serde(rename = "@embedRanges", skip_serializing_if = "Option::is_none")]
     pub embed_ranges: Option<String>,
 }

@@ -9,10 +9,10 @@ pub struct DOMTimelines {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Timeline {
-    #[serde(rename = "@name")]
+    #[serde(rename = "@name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(rename = "@currentFrame")]
+    #[serde(rename = "@currentFrame", skip_serializing_if = "Option::is_none")]
     pub current_frame: Option<u32>,
 
     #[serde(rename = "layers", default)]

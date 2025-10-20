@@ -8,9 +8,9 @@ pub struct DOMPublishHistory {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct PublishItem {
-    #[serde(rename = "@publishSize")]
+    #[serde(rename = "@publishSize", skip_serializing_if = "Option::is_none")]
     pub publish_size: Option<u32>,
 
-    #[serde(rename = "@publishTime")]
+    #[serde(rename = "@publishTime", skip_serializing_if = "Option::is_none")]
     pub publish_time: Option<u32>,
 }

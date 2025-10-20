@@ -10,39 +10,51 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOM {
-    #[serde(rename = "@backgroundColor")]
+    #[serde(rename = "@backgroundColor", skip_serializing_if = "Option::is_none")]
     pub background_color: Option<String>,
 
-    #[serde(rename = "@width")]
+    #[serde(rename = "@width", skip_serializing_if = "Option::is_none")]
     pub width: Option<u32>,
-    #[serde(rename = "@height")]
+    #[serde(rename = "@height", skip_serializing_if = "Option::is_none")]
     pub height: Option<u32>,
 
-    #[serde(rename = "@currentTimeline")]
+    #[serde(rename = "@currentTimeline", skip_serializing_if = "Option::is_none")]
     pub current_timeline: Option<u32>,
-    #[serde(rename = "@xflVersion")]
+    #[serde(rename = "@xflVersion", skip_serializing_if = "Option::is_none")]
     pub xfl_version: Option<f32>,
-    #[serde(rename = "@creatorInfo")]
+    #[serde(rename = "@creatorInfo", skip_serializing_if = "Option::is_none")]
     pub creator_info: Option<String>,
-    #[serde(rename = "@platform")]
+    #[serde(rename = "@platform", skip_serializing_if = "Option::is_none")]
     pub platform: Option<String>,
-    #[serde(rename = "@versionInfo")]
+    #[serde(rename = "@versionInfo", skip_serializing_if = "Option::is_none")]
     pub version_info: Option<String>,
-    #[serde(rename = "@majorVersion")]
+    #[serde(rename = "@majorVersion", skip_serializing_if = "Option::is_none")]
     pub major_version: Option<u32>,
-    #[serde(rename = "@buildNumber")]
+    #[serde(rename = "@buildNumber", skip_serializing_if = "Option::is_none")]
     pub build_number: Option<u32>,
-    #[serde(rename = "@viewAngle3D")]
+    #[serde(rename = "@viewAngle3D", skip_serializing_if = "Option::is_none")]
     pub view_angle_3d: Option<f32>,
-    #[serde(rename = "@nextSceneIdentifier")]
+    #[serde(
+        rename = "@nextSceneIdentifier",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub next_scene_identifier: Option<u32>,
-    #[serde(rename = "@playOptionsPlayLoop")]
+    #[serde(
+        rename = "@playOptionsPlayLoop",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub play_options_play_loop: Option<bool>,
-    #[serde(rename = "@playOptionsPlayPages")]
+    #[serde(
+        rename = "@playOptionsPlayPages",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub play_options_play_pages: Option<bool>,
-    #[serde(rename = "@playOptionsPlayFrameActions")]
+    #[serde(
+        rename = "@playOptionsPlayFrameActions",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub play_options_play_frame_actions: Option<bool>,
-    #[serde(rename = "@filetypeGUID")]
+    #[serde(rename = "@filetypeGUID", skip_serializing_if = "Option::is_none")]
     pub filetype_guid: Option<String>,
 
     #[serde(rename = "folders", default)]

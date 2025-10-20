@@ -8,13 +8,13 @@ pub struct DOMSwcCache {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMSwc {
-    #[serde(rename = "@hashKey")]
+    #[serde(rename = "@hashKey", skip_serializing_if = "Option::is_none")]
     pub hash_key: Option<String>,
 
-    #[serde(rename = "@href")]
+    #[serde(rename = "@href", skip_serializing_if = "Option::is_none")]
     pub href: Option<String>,
 
-    #[serde(rename = "classDefinitions")]
+    #[serde(rename = "classDefinitions", skip_serializing_if = "Option::is_none")]
     pub class_definitions: Option<DOMClassDefinitions>,
 }
 
@@ -26,6 +26,6 @@ pub struct DOMClassDefinitions {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMClassDefinition {
-    #[serde(rename = "@value")]
+    #[serde(rename = "@value", skip_serializing_if = "Option::is_none")]
     pub value: Option<String>,
 }

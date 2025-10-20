@@ -3,48 +3,51 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct DOMSymbolInstance {
-    #[serde(rename = "@libraryItemName")]
+    #[serde(rename = "@libraryItemName", skip_serializing_if = "Option::is_none")]
     pub library_item_name: Option<String>,
 
-    #[serde(rename = "@name")]
+    #[serde(rename = "@name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[serde(rename = "@symbolType")]
+    #[serde(rename = "@symbolType", skip_serializing_if = "Option::is_none")]
     pub symbol_type: Option<String>,
 
-    #[serde(rename = "@loop")]
+    #[serde(rename = "@loop", skip_serializing_if = "Option::is_none")]
     pub loop_type: Option<String>,
 
-    #[serde(rename = "@selected")]
+    #[serde(rename = "@selected", skip_serializing_if = "Option::is_none")]
     pub selected: Option<bool>,
 
-    #[serde(rename = "@centerPoint3DX")]
+    #[serde(rename = "@centerPoint3DX", skip_serializing_if = "Option::is_none")]
     pub center_point_3d_x: Option<String>,
 
-    #[serde(rename = "@centerPoint3DY")]
+    #[serde(rename = "@centerPoint3DY", skip_serializing_if = "Option::is_none")]
     pub center_point_3d_y: Option<String>,
 
-    #[serde(rename = "@accName")]
+    #[serde(rename = "@accName", skip_serializing_if = "Option::is_none")]
     pub acc_name: Option<String>,
 
-    #[serde(rename = "@description")]
+    #[serde(rename = "@description", skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
-    #[serde(rename = "@shortcut")]
+    #[serde(rename = "@shortcut", skip_serializing_if = "Option::is_none")]
     pub shortcut: Option<String>,
 
-    #[serde(rename = "@tabIndex")]
+    #[serde(rename = "@tabIndex", skip_serializing_if = "Option::is_none")]
     pub tab_index: Option<u32>,
 
-    #[serde(rename = "@forceSimple")]
+    #[serde(rename = "@forceSimple", skip_serializing_if = "Option::is_none")]
     pub force_simple: Option<bool>,
 
-    #[serde(rename = "@hasAccessibleData")]
+    #[serde(rename = "@hasAccessibleData", skip_serializing_if = "Option::is_none")]
     pub has_accessible_data: Option<bool>,
 
-    #[serde(rename = "matrix")]
+    #[serde(rename = "matrix", skip_serializing_if = "Option::is_none")]
     pub matrix: Option<Matrices>,
 
-    #[serde(rename = "transformationPoint")]
+    #[serde(
+        rename = "transformationPoint",
+        skip_serializing_if = "Option::is_none"
+    )]
     pub transformation_point: Option<Points>,
 }

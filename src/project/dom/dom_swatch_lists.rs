@@ -8,22 +8,22 @@ pub struct DOMSwatchLists {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SwatchList {
-    #[serde(rename = "swatchListInfo")]
+    #[serde(rename = "swatchListInfo", skip_serializing_if = "Option::is_none")]
     pub swatch_list_info: Option<SwatchListInfo>,
 
-    #[serde(rename = "swatches")]
+    #[serde(rename = "swatches", skip_serializing_if = "Option::is_none")]
     pub swatches: Option<Swatches>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SwatchListInfo {
-    #[serde(rename = "@name")]
+    #[serde(rename = "@name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct Swatches {
-    #[serde(rename = "swatchListInfo")]
+    #[serde(rename = "swatchListInfo", skip_serializing_if = "Option::is_none")]
     pub swatch_list_info: Option<SwatchListInfo>,
 
     #[serde(rename = "SolidSwatchItem", default)]
@@ -32,18 +32,18 @@ pub struct Swatches {
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
 pub struct SolidSwatchItem {
-    #[serde(rename = "@color")]
+    #[serde(rename = "@color", skip_serializing_if = "Option::is_none")]
     pub color: Option<String>,
 
-    #[serde(rename = "@hue")]
+    #[serde(rename = "@hue", skip_serializing_if = "Option::is_none")]
     pub hue: Option<u32>,
 
-    #[serde(rename = "@saturation")]
+    #[serde(rename = "@saturation", skip_serializing_if = "Option::is_none")]
     pub saturation: Option<u32>,
 
-    #[serde(rename = "@brightness")]
+    #[serde(rename = "@brightness", skip_serializing_if = "Option::is_none")]
     pub brightness: Option<u32>,
 
-    #[serde(rename = "@alpha")]
+    #[serde(rename = "@alpha", skip_serializing_if = "Option::is_none")]
     pub alpha: Option<f64>,
 }
